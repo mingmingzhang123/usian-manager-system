@@ -13,8 +13,18 @@ module.exports = defineConfig({
     // 是否开启https
     https: false,
     // 配置跨域
-    // proxy:{
+    proxy: {
+      "/dev1-api": {
+        // 跨域的地址
+        target: 'http://localhost:3000',
+        // 开启跨域
+        changeOrigin: true,
+        // 路径重写
+        pathRewrite: {
+          "^/dev1-api": ''
+        }
+      }
 
-    // }
+    }
   }
 })
