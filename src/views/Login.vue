@@ -17,7 +17,7 @@
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="submitForm('ruleForm')"
-        >立即创建</el-button
+        >登录</el-button
       >
     </div>
   </div>
@@ -49,35 +49,46 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 调用登录的api
-          getLogin(this.form)
-            .then((res) => {
-              console.log(res);
-              localStorage.setItem('token',res.data.data.token)
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-            this.$router.push('/')
+          this.handleLogin();
+
+          this.$router.push("/");
         } else {
           console.log("请输入账号或密码");
           return false;
         }
       });
     },
+    handleLogin() {
+      getLogin(this.form)
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("token", res.data.data.token);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 .login {
-  background-image: url("../assets/1.png");
-  height: 100vh;
+  background-image: url("http://vue.mengxuegu.com/img/login.b665435f.jpg");
+  height: 100%;
   padding-top: 200px;
+  h1{
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
   .box {
-    width: 300px;
+    width: 350px;
     padding: 60px;
-    background-color: aqua;
+    background-color: rgba(250,250,250,0.5);
     color: #000;
     margin: auto;
+    border-radius: 20px;
   }
 }
 </style>
