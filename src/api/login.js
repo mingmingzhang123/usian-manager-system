@@ -21,3 +21,10 @@ export const user = () => {
 
     })
 }
+// 退出登录接口
+export const logout = () => {
+    return request({
+        url: 'user/logout',
+        method: 'POST'
+    })
+}
