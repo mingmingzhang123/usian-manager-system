@@ -24,6 +24,16 @@ export default {
     AppAside,
     AppMain,
   },
+  watch: {
+    $route: {
+      handler() {
+        let info = localStorage.getItem("userInfo");
+        if (info == null) {
+          this.$store.dispatch("handleUserInfo");
+        }
+      },
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -35,7 +45,6 @@ export default {
   background-color: #2d3a4b;
   color: #fff;
   line-height: 50px;
-
 }
 
 .el-aside {
