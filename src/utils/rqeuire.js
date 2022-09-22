@@ -14,6 +14,7 @@ const exceptionMessage = {
 import {
     Message
 } from "element-ui";
+import store from "../store"
 
 
 // 实例对象
@@ -28,7 +29,12 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    config.headers.token = window.localStorage.getItem("token")
+    // 获取vuex中的token
+    const token = store.getters.token
+    if (token) config.headers.authorization = "Bearer " + token
+
+
+
     return config;
 }, function (error) {
     // 对请求错误做些什么

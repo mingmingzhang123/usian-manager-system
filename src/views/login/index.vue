@@ -21,7 +21,6 @@
   </div>
 </template>
 <script>
-import { getLogin } from "../api/login";
 export default {
   data() {
     return {
@@ -44,8 +43,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 调用登录的api
-          this.handleLogin();
-          this.$router.push("/");
+          this.handleLogin()
         } else {
           console.log("请输入账号或密码");
           return false;
@@ -55,13 +53,26 @@ export default {
     // 调取登录的api
     // 使用async 和await时必须要使用try和catch接收请求的成功或失败
     async handleLogin() {
-      try {
-        const response = await getLogin(this.form);
-        console.log("response=>", response);
-        console.log("token=>", response.token);
-      } catch (e) {
-        console.log(e);
-      }
+      // 调用vuex中的登录请求
+      const token = await this.$store.dispatch("login", this.form);
+      // 如果获取不到token就直接把错误返回出去
+      if (!token) return;
+      // 调用vuex中的用户请求
+      const userinfo = await this.$store.dispatch("handleUserInfo");
+      // 如果获取不到用户信息就直接把错误返回出去
+      if (!userinfo) return;
+      // 给个登录成功的提示
+      this.$message.success("登录成功");
+      // 跳转到首页
+      this.$router.push("/");
+      // 将登录请求写在登录页面
+      // try {
+      //   const response = await getLogin(this.form);
+      //   console.log("response=>", response);
+      //   console.log("token=>", response.token);
+      // } catch (e) {
+      //   console.log(e);
+      // }
     },
   },
 };
