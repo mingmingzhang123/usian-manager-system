@@ -24,10 +24,13 @@ export default {
     AppAside,
     AppMain,
   },
+  // 路由监听
   watch: {
     $route: {
       handler() {
+        // 获取本地用户信息
         let info = localStorage.getItem("userInfo");
+        // 判断本地是否有用户信息如果没有就从新获取用户信息
         if (info == null) {
           this.$store.dispatch("handleUserInfo");
         }
