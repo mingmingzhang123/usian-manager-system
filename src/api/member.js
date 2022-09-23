@@ -8,7 +8,34 @@ const getMemberList = (page, size, data) => {
         data
     })
 }
+// 删除会员列表接口
+const DeteleMember = (id) => {
+    return request({
+        url: `member/${id}`,
+        method: 'DELETE'
+    })
+}
+// 新增会员列表接口
+const Addmember = (data) => {
+    return request({
+        url: 'member',
+        method: 'POST',
+        data
+    })
+}
+
+
+
+
+
+
+
+
+
+
 
 export default {
-    getMemberList
+    getMemberList,
+    DeteleMember,
+    Addmember
 }
