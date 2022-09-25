@@ -32,7 +32,7 @@
       <el-form-item>
         <el-button type="primary" @click="handleQueryMember">查询</el-button>
         <el-button type="primary" @click="handleOpenDialog">新增</el-button>
-        <el-button type="primary" @click="handleReset('memberQueryForm')"
+        <el-button  @click="handleReset('memberQueryForm')"
           >重置</el-button
         >
       </el-form-item>
@@ -120,12 +120,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="会员地址" prop="address">
-            <el-input type="textarea" v-model="dialogForm.address"></el-input>
-          </el-form-item>
+          <el-input type="textarea" v-model="dialogForm.address"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSubmit('dialogForm')">确 定</el-button>
+        <el-button type="primary" @click="handleSubmit('dialogForm')"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -258,18 +260,20 @@ export default {
       // 判断id的是不是number类型如果是显示编辑的信息
       if (typeof id == "number") {
         this.dialogTitle = "会员编辑";
+        this.handlefindMember(id);
         return;
       }
       // 如果不是就显示新增
       this.dialogTitle = "会员新增";
+      // 将当前行id传给查找单个会员列表
     },
     // 弹出框的登录
-    handleSubmit(formName){
+    handleSubmit(formName) {
       this.$refs[formName].validate((valid) => {
-         console.log(valid);
-        });
-      
-
+        if (!valid) return;
+        // 判断有没有id有id执行编辑功能，没有id就执行添加
+        this.dialogForm.id ? this.handleEmitmember() : this.handleAddmember();
+      });
     },
     // 新增会员列表
     async handleAddmember() {
@@ -278,9 +282,38 @@ export default {
         const response = await MemberApi.Addmember(this.dialogForm);
         // 弹出框隐藏
         this.dialogFormVisible = false;
+        this.$message.success("新增成功")
         // 清空表单
         this.handleReset("dialogForm");
         this.getmember();
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    // 编辑会员列表
+    async handleEmitmember() {
+      try {
+        const response = await MemberApi.Editmember(
+          this.dialogForm.id,
+          this.dialogForm
+        );
+        // 弹出框隐藏
+        this.dialogFormVisible = false;
+        this.$message.success("更改成功");
+        // 清空表单
+        this.handleReset("dialogForm");
+        //  从新调用请求数据
+        this.getmember();
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    // 查询单个会员列表
+    async handlefindMember(id) {
+      try {
+        const response = await MemberApi.findMember(id);
+        // 将返回的数据返回给弹出框表单
+        this.dialogForm = response;
       } catch (e) {
         console.log(e.message);
       }
